@@ -10,8 +10,13 @@
     "resolveJsonModule": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "strictPropertyInitialization": true,
-    "skipLibCheck": true
+    "strictPropertyInitialization": false,
+    "skipLibCheck": true,
+    //"typeRoots": []
+    "baseUrl": "src",
+    "paths": {
+      "@shared/*": ["shared/*"]
+    }
   },
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules", "build"]
