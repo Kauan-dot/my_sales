@@ -6,7 +6,7 @@ import cors from "cors";
 import routes from "./routes";
 import ErrorHandleMiddleware from "../middlewares/ErrorHandleMiddleware";
 import { AppDataSource } from "../typeorm/data-source";
-import { error } from "console";
+import { errors } from "celebrate";
 
 AppDataSource.initialize()
   .then(async () => {
@@ -16,6 +16,7 @@ AppDataSource.initialize()
     app.use(express.json());
   
     app.use(routes);
+    app.use(errors())
     app.use(ErrorHandleMiddleware.handdleError);
   
     app.listen(3333, () => {
