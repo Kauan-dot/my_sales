@@ -5,22 +5,22 @@ export class User {
   @PrimaryGeneratedColumn()  
   id: number;
 
-  @Column()
+  @Column({ type: "varchar" })
   name: string;
 
-  @Column()
+  @Column({ type: "varchar" })
   email: string;
 
-  @Column()
+  @Column({ type: "varchar" })
   password: string;
 
-  @Column()
+  @Column({ type: "varchar" })
   avatar: string;
 
   @CreateDateColumn()
-  createdAt: Date;  
+  created_at: Date;  
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updated_at: Date;
 
 }
