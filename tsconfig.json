@@ -12,7 +12,10 @@
     "emitDecoratorMetadata": true,
     "strictPropertyInitialization": false,
     "skipLibCheck": true,
-    //"typeRoots": []
+    "typeRoots": [
+      "node_modules/@types",
+      "src/@types"
+    ],
     "baseUrl": "src",
     "paths": {
       "@shared/*": ["shared/*"]

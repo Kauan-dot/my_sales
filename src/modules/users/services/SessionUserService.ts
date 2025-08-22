@@ -2,7 +2,7 @@ import { compare } from "bcrypt";
 import { User } from "../database/entities/User";
 import { usersRepositories } from "../database/repositories/UsersRepositories";
 import AppError from "@shared/errors/AppError";
-import { sign } from "jsonwebtoken";
+import { Secret, sign } from "jsonwebtoken";
 
 interface ISessionUser {
     email: string;
@@ -30,7 +30,7 @@ export default class SessionUserService {
             throw new AppError("Email/Password incorrect", 401);
         }
 
-        const token = sign({}, process.env.APP_SECRET as string, {subject: String(user.id), expiresIn: '1d'});
+        const token = sign({}, process.env.APP_SECRET as Secret, {subject: String(user.id), expiresIn: '1d'});
 
         return {
             user,
