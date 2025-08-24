@@ -18,10 +18,12 @@ export default class UpdareUserAvatarService {
             throw new AppError("Only authenticated users can change avatar.", 401);
         }
 
+        console.log(user);
+
         if(user.avatar) {
             const userAvatarFilePath = path.join(uploadConfig.directory, user.avatar);
             const userAvatarFileExists = await fs.promises.stat(userAvatarFilePath);
-
+            console.log(userAvatarFileExists);
             if(userAvatarFileExists) {
                 await fs.promises.unlink(userAvatarFilePath);
             }
