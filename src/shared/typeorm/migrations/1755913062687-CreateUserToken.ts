@@ -52,7 +52,7 @@ export class CreateUserToken1755913062687 implements MigrationInterface {
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
-
+        await queryRunner.dropTable('user_tokens')
     }
 
 }
