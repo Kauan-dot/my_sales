@@ -18,4 +18,5 @@ export class Product {
 
     @Column({ type: 'timestamp'})
     updated_at: Date;
+    order_products: any;
 }
