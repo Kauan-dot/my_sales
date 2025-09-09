@@ -6,7 +6,7 @@ export class AddProductIdToOrdersProducts1756950691628 implements MigrationInter
         await queryRunner.addColumn(
             'orders_products',
             new TableColumn({
-                name: 'prduct_id',
+                name: 'product_id',
                 type: 'integer',
                 isNullable: true,
             })
@@ -16,7 +16,7 @@ export class AddProductIdToOrdersProducts1756950691628 implements MigrationInter
             'orders_products',
             new TableForeignKey({
                 name: 'OrderProductsProduct',
-                columnNames: ['prduct_id'],
+                columnNames: ['product_id'],
                 referencedTableName: 'products',
                 referencedColumnNames: ['id'],
                 onDelete: 'SET NULL',
@@ -26,7 +26,7 @@ export class AddProductIdToOrdersProducts1756950691628 implements MigrationInter
 
     public async down(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.dropForeignKey('orders_products', 'OrderProductsProduct')
-        await queryRunner.dropColumn('orders_products', 'prduct_id')
+        await queryRunner.dropColumn('orders_products', 'product_id')
     }
 
 }
