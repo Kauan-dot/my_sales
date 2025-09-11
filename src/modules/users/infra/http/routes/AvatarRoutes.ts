@@ -1,7 +1,7 @@
 import { Router } from "express";
 import UpdateAvatarControllers from "../controllers/UpdateAvatarController";
 import multer from "multer";
-import uploadConfig from "../../../config/upload";
+import uploadConfig from "../../../../../config/upload";
 import AuthMiddleware from "@shared/middlewares/authMiddleware";
 
 const avatarRoutes = Router();
