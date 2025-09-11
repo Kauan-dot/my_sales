@@ -1,6 +1,7 @@
 import AppError from "@shared/errors/AppError";
 import { Product } from "../database/entities/Product";
 import { productsRepositories } from "../database/repositories/ProductsRepositories";
+import RedisCache from "@shared/cache/RedisCache";
 
 interface ICreateProduct {
     name: string;
@@ -23,6 +24,9 @@ export default class CreateProductService {
         });
 
         await productsRepositories.save(product);
+
+        const redisCache = new RedisCache()
+        await redisCache.invalidate("api-vendas-PRODUCT_LIST");        
 
         return product
     

@@ -3,14 +3,16 @@ import ListCustomerService from "../services/ListCustomersService";
 import ShowCustomerService from "../services/ShowCustomerService";
 import CreateCustomerService from "../services/CreateCustomerService";
 import UpdateCustomerService from "../services/UpdateCustomerService";
-import { request } from "http";
 import DeleteCustomerService from "../services/DeleteCustomerService";
 
 export default class CustomersControllers {
     async index(request: Request, response: Response): Promise<Response> {
+        const page = parseInt(request.query.page as string) || 1;
+        const limit = parseInt(request.query.limit as string) || 10;
+
         const listCustomers = new ListCustomerService();
 
-        const customers = await listCustomers.execute();
+        const customers = await listCustomers.execute(page, limit);
 
         return response.json(customers)
     }

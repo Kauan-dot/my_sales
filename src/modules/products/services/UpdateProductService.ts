@@ -1,6 +1,7 @@
 import AppError from "@shared/errors/AppError";
 import { Product } from "../database/entities/Product";
 import { productsRepositories } from "../database/repositories/ProductsRepositories";
+import RedisCache from "@shared/cache/RedisCache";
 
 interface IUpdateProduct {
     id: string;
@@ -12,6 +13,7 @@ interface IUpdateProduct {
 export default class UpdateProductService {
     async execute({ id, name, price, quantity }: IUpdateProduct): Promise<Product> {
         const product = await productsRepositories.findById(id);
+        const redisCache = new RedisCache()    
         
         if(!product) {
           throw new AppError("Product not found", 404);
@@ -28,6 +30,8 @@ export default class UpdateProductService {
         product.quantity = quantity;
 
         await productsRepositories.save(product);
+
+        await redisCache.invalidate("api-vendas-PRODUCT_LIST");
 
         return product;
     }
