@@ -4,10 +4,10 @@ import express from "express";
 import cors from "cors";
 
 import routes from "./routes";
-import ErrorHandleMiddleware from "../middlewares/ErrorHandleMiddleware";
 import { AppDataSource } from "../typeorm/data-source";
 import { errors } from "celebrate";
 import rateLimiter from "@shared/middlewares/rateLimiter";
+import ErrorHandleMiddleware from "@shared/middlewares/ErrorHandleMiddleware";
 
 AppDataSource.initialize()
   .then(async () => {

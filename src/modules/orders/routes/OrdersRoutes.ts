@@ -1,8 +1,8 @@
 import { Router } from 'express';
 import OrdersControllers from '../controller/OrdersControllers';
 import AuthMiddleware from '@shared/middlewares/authMiddleware';
-import { idParamsValidate } from 'modules/customers/schemas/CustomerSchema';
 import { createOrderValidate } from '../schemas/OrdersSchemas';
+import { idParamsValidate } from 'modules/customers/infra/http/schemas/CustomerSchema';
 
 const ordersRouter = Router();
 const ordersController = new OrdersControllers();
