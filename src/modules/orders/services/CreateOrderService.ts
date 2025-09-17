@@ -1,9 +1,9 @@
 import AppError from "@shared/errors/AppError";
-import { customerRepository } from "modules/customers/infra/database/repositories/CustomerRepositories";
 import { Product } from "modules/products/infra/database/entities/Product";
 import { productsRepositories } from "modules/products/infra/database/repositories/ProductsRepositories";
 import { orderRepositories } from "../infra/database/repositories/OrderRepositories";
 import { Order } from "../infra/database/entities/Order";
+import { ICustomersRepository } from "modules/customers/domain/repositories/ICustomersRepositories";
 
 interface ICreateOrder {
     customer_id: string;
@@ -11,8 +11,9 @@ interface ICreateOrder {
 }
 
 export class CreateOrderService {
+    constructor(private readonly customerRepository: ICustomersRepository) {}
     async execute({customer_id, products}: ICreateOrder): Promise<Order> {
-        const customerExists = await customerRepository.findById(Number(customer_id));
+        const customerExists = await this.customerRepository.findById(Number(customer_id));
         if (!customerExists) {
             throw new AppError('Cold not find any customer with the given id.');
         }

@@ -2,6 +2,7 @@ import "reflect-metadata";
 import "express-async-errors";
 import express from "express";
 import cors from "cors";
+import '@shared/container';
 
 import routes from "./routes";
 import { AppDataSource } from "../typeorm/data-source";

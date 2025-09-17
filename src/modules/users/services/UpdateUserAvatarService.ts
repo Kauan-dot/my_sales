@@ -1,38 +1,43 @@
-import AppError from "@shared/errors/AppError";
-import { User } from "../infra/database/entities/User";
-import { usersRepositories } from "../infra/database/repositories/UsersRepositories";
-import path from "path";
-import uploadConfig from "config/upload";
-import fs from "fs";
+import AppError from '@shared/errors/AppError';
+import path from 'path';
+import uploadConfig from 'config/upload';
+import fs from 'fs';
+import { IUsersRepository } from '../domain/repositories/IUserRepositories';
+import { inject, injectable } from 'tsyringe';
+import { User } from '../infra/database/entities/User';
 
-interface IUpdareUserAvatar {
-    userId: string;
-    avatarFileName: string;
+interface IRequest {
+  userId: string;
+  avatarFileName: string;
 }
+@injectable()
+class UpdateUserAvatarService {
+  constructor(
+    @inject('UsersRepository')
+    private usersRepository: IUsersRepository,
+  ) {}
+  public async execute({ userId, avatarFileName }: IRequest): Promise<User> {
+    const user = await this.usersRepository.findById(userId);
 
-export default class UpdareUserAvatarService {
-    async execute( {userId, avatarFileName}: IUpdareUserAvatar): Promise<User> {
-        const user = await usersRepositories.findById(Number(userId));
-
-        if(!user) {
-            throw new AppError("Only authenticated users can change avatar.", 401);
-        }
-
-        console.log(user);
-
-        if(user.avatar) {
-            const userAvatarFilePath = path.join(uploadConfig.directory, user.avatar);
-            const userAvatarFileExists = await fs.promises.stat(userAvatarFilePath);
-            console.log(userAvatarFileExists);
-            if(userAvatarFileExists) {
-                await fs.promises.unlink(userAvatarFilePath);
-            }
-        }
-
-        user.avatar = avatarFileName;
-
-        await usersRepositories.save(user);
-        return user;
+    if (!user) {
+      throw new AppError('User not found.', 404);
     }
+
+    if (user.avatar) {
+      const userAvatarFilePath = path.join(uploadConfig.directory, user.avatar);
+      const userAvatarFileExists = await fs.promises.stat(userAvatarFilePath);
+
+      if (userAvatarFileExists) {
+        await fs.promises.unlink(userAvatarFilePath);
+      }
+    }
+
+    user.avatar = avatarFileName;
+
+    await this.usersRepository.save(user);
+
+    return user;
+  }
 }
 
+export default UpdateUserAvatarService;

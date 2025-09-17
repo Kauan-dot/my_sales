@@ -1,40 +1,50 @@
-import { compare } from "bcrypt";
-import { User } from "../infra/database/entities/User";
-import { usersRepositories } from "../infra/database/repositories/UsersRepositories";
-import AppError from "@shared/errors/AppError";
-import { Secret, sign } from "jsonwebtoken";
+import AppError from '@shared/errors/AppError';
+import { compare } from 'bcrypt';
+import { sign } from 'jsonwebtoken';
+import 'dotenv/config';
+import 'reflect-metadata';
+import { inject, injectable } from 'tsyringe';
+import { IUsersRepository } from '../domain/repositories/IUserRepositories';
+import { User } from '../infra/database/entities/User';
 
-interface ISessionUser {
-    email: string;
-    password: string;
+interface IRequest {
+  email: string;
+  password: string;
 }
 
-interface ISessionRespomse {
-    user: User;
-    token: string;
+interface IResponse {
+  user: User;
+  token: string;
 }
+@injectable()
+class CreateSessionsService {
+  constructor(
+    @inject('UsersRepository')
+    private usersRepository: IUsersRepository,
+  ) {}
+  public async execute({ email, password }: IRequest): Promise<IResponse> {
+    const user = await this.usersRepository.findByEmail(email);
 
-export default class SessionUserService {
-    async execute({email, password}: ISessionUser): Promise<ISessionRespomse> {
-
-        const user = await usersRepositories.findByEmail(email);
-
-        if (!user) {
-            throw new AppError("Email/Password incorrect", 401);
-        }
-
-        const passwordConfirmed = await compare(password, user.password);
-        
-
-        if (!passwordConfirmed) {
-            throw new AppError("Email/Password incorrect", 401);
-        }
-
-        const token = sign({}, process.env.APP_SECRET as Secret, {subject: String(user.id), expiresIn: '1d'});
-
-        return {
-            user,
-            token
-        };
+    if (!user) {
+      throw new AppError('Incorrect email/password combination.', 401);
     }
+
+    const passwordConfirmed = await compare(password, user.password);
+
+    if (!passwordConfirmed) {
+      throw new AppError('Incorrect email/password combination.', 401);
+    }
+
+    const token = sign({}, process.env.APP_SECRET as string, {
+      subject: String(user.id),
+      expiresIn: '1d',
+    });
+
+    return {
+      user,
+      token,
+    };
+  }
 }
+
+export default CreateSessionsService;

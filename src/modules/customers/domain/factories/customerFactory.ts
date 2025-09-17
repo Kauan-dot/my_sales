@@ -1,0 +1,1 @@
+export const customerMock = {name: 'John Doe', email: 'jondoe@example.com'}
